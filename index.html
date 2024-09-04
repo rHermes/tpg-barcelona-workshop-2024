@@ -1,40 +1,89 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+    <title>reveal.js</title>
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/black.css">
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <h1>C++ Workshop Barcelona 2024</h1>
+                <p>Presentert av Teodor Spæren</p>
+            </section>
+
+            <section>
+                <h2>Innhold</h2>
+                <ul>
+                    <li>Gjør C++ enklere</li>
+                    <ul>
+                        <li>Lambdaer</li>
+                        <li>Memory managment 👀</li>
+                        <li><code>emplace</code></li>
+                    </ul>
+                    <li>Concepts</li>
+                    <li>Ranges</li>
+                    <li>Små gotchas</li>
+                    <li>Optimalisering (hvis vi rekker...)</li>
+                </ul>
+            </section>
+
+            <section>
+                <section>
+                    <h1>Gjør C++ enklere</h1>
+                    <p>
+                        <q>Within C++, there is a much smaller and cleaner
+                            language struggling to get out</q>
+                    <p>Bjarne Stroustrup</p>
+                    </p>
+                </section>
+            </section>
+
+            <section>
+                <h1>Concepts</h1>
+                <p>Veien ut av template helvete</p>
+            </section>
+
+            <section>
+                <h1>Ranges</h1>
+                <p>Mye kult, mye rart</p>
+            </section>
+
+
+            <section>
+                <h1>Små gotchas</h1>
+                <p>"C++ is the language of wrong defaults"</p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+        // More info about initialization & config:
+        // - https://revealjs.com/initialization/
+        // - https://revealjs.com/config/
+        Reveal.initialize({
+            hash: true,
+
+            // Learn about plugins: https://revealjs.com/plugins/
+            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+        });
+    </script>
+</body>
+
 </html>
