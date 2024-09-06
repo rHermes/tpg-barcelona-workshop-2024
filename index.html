@@ -1,315 +1,339 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
     <title>reveal.js</title>
 
-    <link rel="stylesheet" href="dist/reset.css">
-    <link rel="stylesheet" href="dist/reveal.css">
-    <link rel="stylesheet" href="dist/theme/black.css">
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" />
 
     <!-- Theme used for syntax highlighted code -->
-    <link rel="stylesheet" href="plugin/highlight/base16/solarized-light.css">
-</head>
+    <link rel="stylesheet" href="plugin/highlight/base16/solarized-light.css" />
+  </head>
 
-<body>
+  <body>
     <div class="reveal">
-        <div class="slides">
-            <section>
-                <h1>C++ Workshop Barcelona 2024</h1>
-                <p>Presentert av Teodor Spæren</p>
-            </section>
+      <div class="slides">
+        <section>
+          <h1>C++ Workshop Barcelona 2024</h1>
+          <p>Presentert av Teodor Spæren</p>
+        </section>
 
-            <section>
-                <h1>Gjør c++ enklere</h1>
-                <p>
-                    <q>Within C++, there is a much smaller and cleaner
-                        language struggling to get out</q>
-                <p>Bjarne Stroustrup</p>
-                </p>
+        <section>
+          <h1>Gjør c++ enklere</h1>
+          <q
+            >Within C++, there is a much smaller and cleaner language struggling
+            to get out</q
+          >
+          <p>Bjarne Stroustrup</p>
 
-                <aside class="notes">
-                    Målet med talken er å gi noen innsikt i ting dere kan ta med hjem og
-                    bruke til å gjøre koden deres enklere. Derfor vil noen av tingene være
-                    veldig surface level, for å gi dere nok info til å vite om dere
-                    trenger å bruke mer energi på dette.
-                </aside>
-            </section>
+          <aside class="notes">
+            Målet med talken er å gi noen innsikt i ting dere kan ta med hjem og
+            bruke til å gjøre koden deres enklere. Derfor vil noen av tingene
+            være veldig surface level, for å gi dere nok info til å vite om dere
+            trenger å bruke mer energi på dette.
+          </aside>
+        </section>
 
+        <section>
+          <h2>Innhold</h2>
+          <ul>
+            <li>Små tips og triks</li>
+            <li>🔥Lambdaer🔥</li>
+            <li>🔥Concepts🔥</li>
+            <li>Ranges</li>
+            <li><code>std::string_view</code></li>
+            <li>Memory managment 👀</li>
+            <li>Ting som gjør livet vansklig</li>
+            <li>Optimalisering (hvis vi rekker...)</li>
+          </ul>
+          <aside class="notes">
+            Det er mye på tapetet her, så jeg prøver å putte de tingene som er
+            mest brukbare først og om vi går tom for tid så er det greit! Vi
+            starter med bare litt div tips som dere kan ta rett med dere på
+            jobben
+          </aside>
+        </section>
 
-            <section>
-                <h2>Innhold</h2>
-                <ul>
-                    <li>Små tips og triks</li>
-                    <li>🔥Lambdaer🔥</li>
-                    <li>🔥Concepts🔥</li>
-                    <li>Ranges</li>
-                    <li><code>std::string_view</code></li>
-                    <li>Memory managment 👀</li>
-                    <li>Ting som gjør livet vansklig</li>
-                    <li>Optimalisering (hvis vi rekker...)</li>
-                </ul>
-                <aside class="notes">
-                    Det er mye på tapetet her, så jeg prøver å putte de tingene som er mest brukbare
-                    først og om vi går tom for tid så er det greit!
+        <section>
+          <h1>Små tips og triks</h1>
 
-                    Vi starter med bare litt div tips som dere kan ta rett med dere på jobben
-                </aside>
-            </section>
+          <aside class="notes">
+            Noe som er viktig å påpeke her, er at når jeg spør dere før hvert
+            triks om dere kan det, så er det ikke noe lure spørsmål. Dette er
+            ment som en referanse senere også, så om vi alle kan trikset, så går
+            vi bare videre! Mer en nok innhold!
+          </aside>
+        </section>
 
-            <section>
-                <h1>Små tips og triks</h1>
+        <section>
+          <section>
+            <p><code>std::unordered_(map|set)</code></p>
+            <pre><code data-trim class="language-cpp"><script type="text/template">
+            std::map<int, std::string> dict;
+            std::set<int> seen;
+          </script></code></pre>
+            <p>VS</p>
+            <pre><code data-trim class="language-cpp"><script type="text/template">
+            std::unordered_map<int, std::string> dict;
+            std::unordered_set<int> seen;
+          </script></code></pre>
+          </section>
 
-                <aside class="notes">
-                    Noe som er viktig å påpeke her, er at når jeg spør dere før hvert triks om dere
-                    kan det, så er det ikke noe lure spørsmål. Dette er ment som en referanse senere også,
-                    så om vi alle kan trikset, så går vi bare videre! Mer en nok innhold!
-                </aside>
-            </section>
+          <section>
+            <p><code>std::unordered_(map|set)</code></p>
+            <ul>
+              <li>
+                Nesten drop in versjoner av <code>std::set</code> og
+                <code>std::map</code>
+              </li>
+              <li>Som regel mye raskere</li>
+              <li>Krever at nøkkelen kan hashes</li>
+              <li>Bør være deres default</li>
+            </ul>
+          </section>
+        </section>
 
+        <!-- Structured bindings-->
+        <section>
+          <section>
+            <h1>Structured bindings</h1>
+          </section>
 
-            <section>
-                <section>
-                    <p><code>std::unordered_(map|set)</code></p>
-                    <pre><code data-trim class="language-cpp"><script type="text/template">
-                            std::map<int, std::string> dict;
-                            std::set<int> seen;
-                    </script></code></pre>
-                    <p>VS</p>
-                    <pre><code data-trim class="language-cpp"><script type="text/template">
-                        std::unordered_map<int, std::string> dict;
-                        std::unordered_set<int> seen;
-                    </script></code></pre>
-                </section>
+          <section data-auto-animate>
+            <p>Har du vært her?</p>
+            <pre
+              data-id="wow"
+            ><code data-trim class="language-cpp"  data-line-numbers="|1-3|6-7"><script type="text/template">
+            std::pair<int,int> getPair() {
+                return {1, 2};
+            }
 
-                <section>
-                    <p><code>std::unordered_(map|set)</code></p>
-                    <ul>
-                        <li>Nesten drop in versjoner av <code>std::set</code> og <code>std::map</code></li>
-                        <li>Som regel mye raskere</li>
-                        <li>Krever at nøkkelen kan hashes</li>
-                        <li>Bør være deres default</li>
-                    </ul>
-                </section>
-            </section>
-            
-            <!-- Structured bindings-->
-            <section>
-                <section>
-                    <h1>Structured bindings</h1>
-                </section>
+            int main() {
+                auto pp = getPair();
+                std::cout << pp.first + pp.second << "\n";
+            }
+          </script></code></pre>
+          </section>
 
-                <section data-auto-animate>
-                    <p>Har du vært her?</p>
-                    <pre data-id="wow"><code data-trim class="language-cpp"  data-line-numbers="|1-3|6-7"><script type="text/template">
-                        std::pair<int,int> getPair() {
-                            return {1, 2};
-                        }
+          <section data-auto-animate>
+            <p>Du kan være her!</p>
+            <pre
+              data-id="wow"
+            ><code data-trim class="language-cpp" data-line-numbers="6-7"><script type="text/template">
+            std::pair<int,int> getPair() {
+                return {1, 2};
+            }
 
-                        int main() {
-                            auto pp = getPair();
-                            std::cout << pp.first + pp.second << "\n";
-                        }
-                    </script></code></pre>
-                </section>
+            int main() {
+                auto [a, b] = getPair();
+                std::cout << (a + b) << "\n";
+            }
+          </script></code></pre>
+          </section>
 
-                <section data-auto-animate>
-                    <p>Du kan være her!</p>
-                    <pre data-id="wow"><code data-trim class="language-cpp" data-line-numbers="6-7"><script type="text/template">
-                        std::pair<int,int> getPair() {
-                            return {1, 2};
-                        }
+          <section data-auto-animate>
+            <p>Eller enda verre, har du vært her?</p>
+            <pre
+              data-id="wow2"
+              data-noescape
+            ><code data-trim class="language-cpp"  data-line-numbers="|1-3|6-7"><script type="text/template">
+            std::tuple<int,int,int> getTuple() {
+                return {1, 2, 3};
+            }
 
-                        int main() {
-                            auto [a, b] = getPair();
-                            std::cout << (a + b) << "\n";
-                        }
-                    </script></code></pre>
-                </section>
+            int main() {
+                const auto pp = getTuple();
+                std::cout << std::get<0>(pp) + std::get<2>(pp) << "\n";
+            }
+          </script></code></pre>
+          </section>
 
-                <section data-auto-animate>
-                    <p>Eller enda verre, har du vært her?</p>
-                    <pre data-id="wow2"><code data-trim class="language-cpp"  data-line-numbers="|1-3|6-7"><script type="text/template">
-                        std::tuple<int,int,int> getTuple() {
-                            return {1, 2, 3};
-                        }
+          <section data-auto-animate>
+            <p>Du kan være her!</p>
+            <pre
+              data-id="wow2"
+            ><code data-trim class="language-cpp" data-line-numbers="6-7"><script type="text/template">
+            std::tuple<int,int,int> getTuple() {
+                return {1, 2, 3};
+            }
 
-                        int main() {
-                            const auto pp = getTuple();
-                            std::cout << std::get<0>(pp) + std::get<2>(pp) << "\n";
-                        }
-                    </script></code></pre>
-                </section>
+            int main() {
+                const auto [a, _, c] = getTuple();
+                std::cout << a + c << "\n";
+            }
+          </script></code></pre>
+          </section>
 
-                <section data-auto-animate>
-                    <p>Du kan være her!</p>
-                    <pre data-id="wow2"><code data-trim class="language-cpp" data-line-numbers="6-7"><script type="text/template">
-                        std::tuple<int,int,int> getTuple() {
-                            return {1, 2, 3};
-                        }
+          <section data-auto-animate>
+            <p>Nå også for maps:</p>
+            <pre
+              data-id="wow3"
+            ><code data-trim class="language-cpp" data-line-numbers="|2-6|8-11"><script type="text/template">
+            int main() {
+                std::unordered_map<int,std::string> dict{
+                    {1, "World"},
+                    {2, "Hey!"},
+                    {3, "Tpg"},
+                };
 
-                        int main() {
-                            const auto [a, _, c] = getTuple();
-                            std::cout << a + c << "\n";
-                        }
-                    </script></code></pre>
-                </section>
+                for (const auto kv : dict) {
+                    std::cout << "Key: " << kv.first;
+                    std::cout << ", value = " << kv.second << "\n";
+                }
+            }
+          </script></code></pre>
+          </section>
 
-                <section data-auto-animate>
-                    <p>Nå også for maps:</p>
-                    <pre data-id="wow3"><code data-trim class="language-cpp" data-line-numbers="|2-6|8-11"><script type="text/template">
-                        int main() {
-                            std::unordered_map<int,std::string> dict{
-                                {1, "World"},
-                                {2, "Hey!"},
-                                {3, "Tpg"},
-                            };
+          <section data-auto-animate>
+            <p>Nå også for maps:</p>
+            <pre
+              data-id="wow3"
+            ><code data-trim class="language-cpp" data-line-numbers="8-11"><script type="text/template">
+            int main() {
+                std::unordered_map<int,std::string> dict{
+                    {1, "World"},
+                    {2, "Hey!"},
+                    {3, "Tpg"},
+                };
 
-                            for (const auto kv : dict) {
-                                std::cout << "Key: " << kv.first;
-                                std::cout << ", value = " << kv.second << "\n";
-                            }
-                        }
-                    </script></code></pre>
-                </section>
+                for (const auto& [id, value] : dict) {
+                    std::cout << "Key: " << id;
+                    std::cout << ", value = " << value << "\n";
+                }
+            }
+          </script></code></pre>
+          </section>
 
-                <section data-auto-animate>
-                    <p>Nå også for maps:</p>
-                    <pre data-id="wow3"><code data-trim class="language-cpp" data-line-numbers="8-11"><script type="text/template">
-                        int main() {
-                            std::unordered_map<int,std::string> dict{
-                                {1, "World"},
-                                {2, "Hey!"},
-                                {3, "Tpg"},
-                            };
+          <section>
+            <h3>Flere alternativer</h3>
+            <pre><code data-trim class="language-cpp" data-line-numbers="|6"><script type="text/template">
+            std::tuple<int,int,int> getTuple() {
+                return {1, 2, 3};
+            }
 
-                            for (const auto& [id, value] : dict) {
-                                std::cout << "Key: " << id;
-                                std::cout << ", value = " << value << "\n";
-                            }
-                        }
-                    </script></code></pre>
-                </section>
+                  auto  [a, b, c] = getTuple(); // #1
+                  auto& [a, b, c] = getTuple(); // #2 (This will error!)
+            const auto  [a, b, c] = getTuple(); // #3
+            const auto& [a, b, c] = getTuple(); // #4
+          </script></code></pre>
+          </section>
+        </section>
 
-                <section>
-                    <h3>Flere alternativer</h3>
-                    <pre><code data-trim class="language-cpp" data-line-numbers="|6"><script type="text/template">
-                        std::tuple<int,int,int> getTuple() {
-                            return {1, 2, 3};
-                        }
+        <!-- If variabler -->
+        <section>
+          <section data-auto-animate>
+            <h2><code>if</code> variabler</h2>
+            <pre
+              data-id="wow"
+            ><code data-trim class="language-cpp" data-line-numbers="|2|4-7"><script type="text/template">
+            std::string getAnswer(int x) {
+                static std::unordered_map<int, std::string> cache;
 
-                              auto  [a, b, c] = getTuple(); // #1
-                              auto& [a, b, c] = getTuple(); // #2 (This will error!)
-                        const auto  [a, b, c] = getTuple(); // #3
-                        const auto& [a, b, c] = getTuple(); // #4
-                    </script></code></pre>
-                </section>
-            </section>
+                auto it = cache.find(x);
+                if (it != cache.end()) {
+                    return it->second;
+                }
 
-            <!-- If variabler -->
-            <section>
-                <section data-auto-animate>
-                    <h2><code>if</code> variabler</h2>
-                    <pre data-id="wow"><code data-trim class="language-cpp" data-line-numbers="|2|4-7"><script type="text/template">
-                    std::string getAnswer(int x) {
-                        static std::unordered_map<int, std::string> cache;
+                // Some other function, not important.
+                auto ans = computeAnswer(x);
 
-                        auto it = cache.find(x);
-                        if (it != cache.end()) {
-                            return it->second;
-                        }
-                        
-                        // Some other function, not important.
-                        auto ans = computeAnswer(x);
+                cache.emplace(x, ans);
+                return ans;
+            }
+          </script></code></pre>
+          </section>
 
-                        cache.emplace(x, ans);
-                        return ans;
-                    }
-                </script></code></pre>
-                </section>
+          <section data-auto-animate>
+            <h2><code>if</code> variabler</h2>
+            <pre
+              data-id="wow"
+            ><code data-id="wow" data-trim class="language-cpp" data-line-numbers="4-6"><script type="text/template">
+            std::string getAnswer(int x) {
+                static std::unordered_map<int, std::string> cache;
 
-                <section data-auto-animate>
-                    <h2><code>if</code> variabler</h2>
-                    <pre data-id="wow"><code data-id="wow" data-trim class="language-cpp" data-line-numbers="4-6"><script type="text/template">
-                    std::string getAnswer(int x) {
-                        static std::unordered_map<int, std::string> cache;
+                if (auto it = cache.find(x); it != cache.end()) {
+                    return it->second;
+                }
 
-                        if (auto it = cache.find(x); it != cache.end()) {
-                            return it->second;
-                        }
-                        
-                        // Some other function, not important.
-                        auto ans = computeAnswer(x);
+                // Some other function, not important.
+                auto ans = computeAnswer(x);
 
-                        cache.emplace(x, ans);
-                        return ans;
-                    }
-                </script></code></pre>
-                </section>
+                cache.emplace(x, ans);
+                return ans;
+            }
+          </script></code></pre>
+          </section>
 
-                <section data-auto-animate>
-                    <h2><code>if</code> variabler</h2>
-                    <pre data-id="wow"><code data-id="wow" data-trim class="language-cpp"><script type="text/template">
-                        if (auto it = cache.find(x); it != cache.end()) {
-                            return it->second;
-                        }
-                </script></code></pre>
-                    <ul>
-                        <li>Scoper variablet</li>
-                        <li>Nyttig for mye brukte navn</li>
-                        <li>Tidligere destruction</li>
-                    </ul>
-                </section>
+          <section data-auto-animate>
+            <h2><code>if</code> variabler</h2>
+            <pre
+              data-id="wow"
+            ><code data-id="wow" data-trim class="language-cpp"><script type="text/template">
+              if (auto it = cache.find(x); it != cache.end()) {
+                  return it->second;
+              }
+            </script></code></pre>
+            <ul>
+              <li>Scoper variablet</li>
+              <li>Nyttig for mye brukte navn</li>
+              <li>Tidligere destruction</li>
+            </ul>
+          </section>
 
-                <section>
-                    <h3>Annet eksempel</h3>
-                    <pre><code data-id="wow" data-trim class="language-cpp"><script type="text/template">
-                        std::unordered_map<int, int> seen;
+          <section>
+            <h3>Annet eksempel</h3>
+            <pre><code data-id="wow" data-trim class="language-cpp"><script type="text/template">
+            std::unordered_map<int, int> seen;
 
-                        // Insert or max.
-                        if (auto [it, inserted] = cache.emplace(x, y); !inserted) {
-                            it->second = std::max(it->second, y);
-                        }
-                </script></code>
-                </section>
-            </section>
+            // Insert or max.
+            if (auto [it, inserted] = cache.emplace(x, y); !inserted) {
+                it->second = std::max(it->second, y);
+            }
+          </script></code></pre>
+          </section>
+        </section>
 
-            <!-- Emplace funksjoner -->
-            <section>
-                <section>
-                    <h2><code>emplace funksjoner</code></h2>
-                    <pre><code data-trim class="language-cpp"><script type="text/template">
+        <!-- Emplace funksjoner -->
+        <section>
+          <section>
+            <h2><code>emplace funksjoner</code></h2>
+            <pre><code data-trim class="language-cpp"><script type="text/template">
                         std::vector<std::pair<int,int>> points;
-                        
+
                         points.push_back({1, 3});
                         points.push_back({13, 8});
                     </script></code></pre>
-                    <p>VS</p>
-                    <pre><code data-trim class="language-cpp"><script type="text/template">
-                        std::vector<std::pair<int,int>> points;
-                        
-                        points.emplace_back(1, 3);
-                        points.emplace_back(13, 8);
-                    </script></code></pre>
-                </section>
+            <p>VS</p>
+            <pre><code data-trim class="language-cpp"><script type="text/template">
+              std::vector<std::pair<int,int>> points;
 
-                <section>
-                    <h3>Hvorfor?</h3>
-                    <ul>
-                        <li>Bedre syntax</li>
-                        <li>Unngår moves</li>
-                        <li>Conditional moves for map!</li>
-                    </ul>
-                </section>
+              points.emplace_back(1, 3);
+              points.emplace_back(13, 8);
+          </script></code></pre>
+          </section>
 
-                <section>
-                    <h3>Hva støtter dette?</h3>
-                    <p>Alle standard bibliotek containere!</p>
-                </section>
+          <section>
+            <h3>Hvorfor?</h3>
+            <ul>
+              <li>Bedre syntax</li>
+              <li>Unngår moves</li>
+              <li>Conditional moves for map!</li>
+            </ul>
+          </section>
 
+          <section>
+            <h3>Hva støtter dette?</h3>
+            <p>Alle standard bibliotek containere!</p>
+          </section>
+
+          <!--
                 <section>
                     <h2><code>std::map_*</code></h2>
                     <pre><code data-trim class="language-cpp"><script type="text/template">
@@ -325,206 +349,254 @@
                     </script></code></pre>
                 </section>
 
-                <section>
-                    <h3>Conditional moves</h3>
-                    <p>Her har vi et problem:</p>
-                    <pre><code data-trim class="language-cpp"><script type="text/template">
-                        std::map<int, std::unique_ptr<std::string>> dict;
+            -->
+          <section data-auto-animate>
+            <h3>Conditional moves</h3>
+            <p>Her har vi et problem:</p>
+            <pre
+              data-id="wow4"
+            ><code data-trim class="language-cpp" data-line-numbers="|3-5|7-13"><script type="text/template">
+              std::map<int, std::unique_ptr<std::string>> dict;
 
-                        // Senere i koden:
-                        dict.insert({})
-                        
-                        // Et sted i koden
-                        dict.emplace(1, std::make_unique<std::string>("Hey!"));
+              // All good, Q is in a valid, but unspecified state.
+              auto Q = std::make_unique<std::string>("Hello");
+              dict.emplace(1, std::move(Q));
+  
+              auto P = std::make_unique<std::string>("World");
+              auto [it, inserted] = dict.emplace(1, std::move(P));
+              if (inserted) {
+                  // If we got it inserted, all good, P has a new home :)
+              } else {
+                  // We didn't manage to insert, but P is now lost!
+              }
+          </script></code></pre>
+          </section>
 
+          <section data-auto-animate>
+            <h3>Conditional moves</h3>
+            <p>Her har vi et problem:</p>
+            <pre
+              data-id="wow4"
+            ><code data-trim class="language-cpp" data-line-numbers="7-13"><script type="text/template">
+            std::map<int, std::unique_ptr<std::string>> dict;
 
-                        dict.insert({1, 3});
-                    </script></code></pre>
-                </section>
+            // All good, Q is in a valid, but unspecified state.
+            auto Q = std::make_unique<std::string>("Hello");
+            dict.emplace(1, std::move(Q));
 
-                <section>
-                    <h3>Gotchas!</h3>
-                    <p>Initializer lists har andre prioriteringer</p>
-                    <pre><code data-trim class="language-cpp"><script type="text/template">
-                        std::vector<std::vector<int>> nested;
-                        
-                        nested.push_back({3, 1});   // nested[0] = {3, 1}
-                        nested.emplace_back(3, 1);  // nested[1] = {1, 1, 1};
-                        nested.emplace_back({3,1}); // nested[2] = {3, 1};
-                    </script></code></pre>
-                </section>
+            auto P = std::make_unique<std::string>("World");
+            auto [it, inserted] = dict.try_emplace(1, std::move(P));
+            if (inserted) {
+                // If we got it inserted, all good, P has a new home :)
+            } else {
+                // We didn't manage to insert it, P was not moved!
+            }
+          </script></code></pre>
+          </section>
 
-            </section>
+          <section>
+            <h3>Gotchas!</h3>
+            <p>Initializer lists har andre prioriteringer</p>
+            <pre><code data-trim class="language-cpp"><script type="text/template">
+            std::vector<std::vector<int>> nested;
 
-            <section>
-                <h1>Lambdaer</h1>
-            </section>
+            nested.push_back({3, 1});   // nested[0] = {3, 1}
+            nested.emplace_back(3, 1);  // nested[1] = {1, 1, 1};
+            nested.emplace_back({3,1}); // nested[2] = {3, 1};
+          </script></code></pre>
+          </section>
+        </section>
 
-            <section>
-                <h2>Lambdaer</h2>
-                <ul>
-                    <li>Siden C++11</li>
-                    <li>Anonyme funksjoner, definert inline</li>
-                    <li>Utrolig nyttige!</li>
-                </ul>
-            </section>
+        <section>
+          <h1>Lambdaer</h1>
+        </section>
 
-            <section>
-                <section>
-                    <h3>Lambda syntax - Basics</h3>
-                    <pre><code data-trim class="language-cpp" data-line-numbers="|1|3|6">
-                        auto funcName = [](int a, int b) {
-                            std::cout << "Hello: " << a << " and " << b << "\n";
-                            return a + b + 2;
-                        };
+        <section>
+          <h2>Lambdaer</h2>
+          <ul>
+            <li>Siden C++11</li>
+            <li>Anonyme funksjoner, definert inline</li>
+            <li>Utrolig nyttige!</li>
+          </ul>
+        </section>
 
-                        int out = funcName(10, 23);
-                    </code></pre>
-                </section>
+        <section>
+          <section>
+            <h3>Lambda syntax - Basics</h3>
+            <pre><code data-trim class="language-cpp" data-line-numbers="|1|3|6"><script type="text/template">
+            auto funcName = [](int a, int b) {
+                std::cout << "Hello: " << a << " and " << b << "\n";
+                return a + b + 2;
+            };
 
-                <section>
-                    <h3>Lambda syntax - Captures I</h3>
-                    <pre><code data-trim class="language-cpp" data-line-numbers="|1|2|3|6-8|9-10">
-                        int byRef = 0;
-                        auto funcName = [&byRef]() {
-                            std::cout << "ref = " << ++byRef << "\n";
-                        };
+            int out = funcName(10, 23);
+          </script></code></pre>
+          </section>
 
-                        funcName(); // ref = 1
-                        funcName(); // ref = 2
-                        std::cout <<  byRef << "\n"; // Outside = 2
-                        byRef = 10;
-                        funcName(); // ref = 11
-                    </code></pre>
-                </section>
+          <section>
+            <h3>Lambda syntax - Captures I</h3>
+            <pre><code data-trim class="language-cpp" data-line-numbers="|1|2|3|6-8|9-10"><script type="text/template">
+            int byRef = 0;
+            auto funcName = [&byRef]() {
+                std::cout << "ref = " << ++byRef << "\n";
+            };
 
-                <section>
-                    <h3>Lambda syntax - Captures III</h3>
-                    <pre><code data-trim class="language-cpp" data-line-numbers="|3">
-                        int byRef = 0;
-                        int byVal = 10;
-                        auto funcName = [&byRef, byVal]() mutable {
-                            std::cout << "ref = " << ++byRef;
-                            std::cout << ", val = " << ++byVal << "\n";
-                        };
-                        
-                        funcName(); // ref = 1, val = 11
-                        funcName(); // ref = 2, val = 12
-                        byRef = 10;
-                        byVal = 100;
-                        funcName(); // ref = 11, val = 13
-                    </code></pre>
-                </section>
-            </section>
+            funcName(); // ref = 1
+            funcName(); // ref = 2
+            std::cout <<  byRef << "\n"; // Outside = 2
+            byRef = 10;
+            funcName(); // ref = 11
+          </script></code></pre>
+          </section>
 
-            <section>
-                <section>
-                    <h3>Noen motiverende eksempler (Noe leetcode)</h3>
-                    <q>Seeing is believing</q>
-                </section>
-            </section>
+          <section>
+            <h3>Lambda syntax - Captures III</h3>
+            <pre><code data-trim class="language-cpp" data-line-numbers="|3"><script type="text/template">
+            int byRef = 0;
+            int byVal = 10;
+            auto funcName = [&byRef, byVal]() mutable {
+                std::cout << "ref = " << ++byRef;
+                std::cout << ", val = " << ++byVal << "\n";
+            };
 
-            <section>
-                <h3>Alt annet dere vil vite, se her:</h3>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/xBAduq0RGes"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <p>C++ lambda Idioms av Timur Doumler (alt annet han gjør er også bra!)</p>
-            </section>
+            funcName(); // ref = 1, val = 11
+            funcName(); // ref = 2, val = 12
+            byRef = 10;
+            byVal = 100;
+            funcName(); // ref = 11, val = 13
+          </script></code></pre>
+          </section>
+        </section>
 
+        <section>
+          <section>
+            <h3>Noen motiverende eksempler (Noe leetcode)</h3>
+            <q>Seeing is believing</q>
+          </section>
+        </section>
 
-            <section>
-                <h1>Concepts</h1>
-                <p>Bedre template krav</p>
-            </section>
+        <section>
+          <h3>Alt annet dere vil vite, se her:</h3>
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/xBAduq0RGes"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+          <p>
+            C++ lambda Idioms av Timur Doumler (alt annet han gjør er også bra!)
+          </p>
+        </section>
 
-            <section>
-                <h3>Motivasjon</h3>
-                <ul>
-                    <li>Bedre feilmeldinger</li>
-                    <li>Enklere å begrense template funksjoner</li>
-                    <li>Mindre press på function overloading</li>
-                    <li>Compiler speed (Ikke der enda)</li>
-                </ul>
-            </section>
+        <section>
+          <h1>Concepts</h1>
+          <p>En bedre måte å begrense template paramtere</p>
 
+          <aside class="notes">
+            Vi skal ikke gå veldig dypt inn i dette. Jeg vil bare gi dere en ide
+            om Hva concepts er. Det er mye nytt her og mange ting til og med
+            ikke jeg har helt grep på, men jeg vil vise noen ting.
+          </aside>
+        </section>
 
-            <section>
-                <section>
-                    <h3>Bedre feilmeldinger</h3>
-                </section>
+        <section>
+          <h3>Motivasjon</h3>
+          <ul>
+            <li>Bedre feilmeldinger</li>
+            <li>bli kvitt <code>std::enable_if</code></li>
+            <li>Mindre press på function overloading</li>
+            <li>Compiler speed (Ikke der enda)</li>
+          </ul>
+        </section>
 
-                <section>
-                    <h3>Har du vært her?</h3>
-                    <p>Long template expansion block</p>
-                </section>
+        <section>
+          <section>
+            <h3>Bedre feilmeldinger</h3>
+          </section>
 
-                <section>
-                    <h3>Nå er vi her</h3>
-                    <p>Wrong type</p>
-                </section>
-            </section>
+          <section>
+            <h3>Har du vært her?</h3>
+            <p>Long template expansion block</p>
+          </section>
 
+          <section>
+            <h3>Nå er vi her</h3>
+            <p>Wrong type</p>
+          </section>
+        </section>
 
-            <section>
-                <h3></h3>
-            </section>
+        <section>
+          <section>
+            <h3>Eksempel</h3>
 
-            <section>
-                <section>
-                    <h1></h1>
-                </section>
-            </section>
+            <p>Vi skal lage en enkel tegne api</p>
+            <ul>
+              <li>Basert på å kalle metoder på en type T</li>
+              <li>Vi ønsker at alle type tegner støtter:</li>
+              <ul>
+                <li><code>size()</code></li>
+                <li><code>draw(int, int);</code></li>
+                <li><code>clear()</code></li>
+              </ul>
+              <li>Kunne brukt polymorphism, men ikke alltid mulig.</li>
+            </ul>
+          </section>
 
-            <section>
-                <h1>Ranges</h1>
-                <q>Mye kult, mye rart</q>
-            </section>
+          <section>
+            <h3>Concept</h3>
+            <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3|5|7"><script type="text/template">
+            template<typename T>
+            concept Screen = requires(T a, int i) {
+                a.clear();                          // #1
+                a.draw(i, i);                       // #2
+                { a.size() } -> std::pair<int,int>; // #3
+            };
+          </script></code></pre>
+          </section>
+        </section>
 
-            <section>
-                <h1>Ranges+</h1>
-                <q>Mye kult, mye rart</q>
-            </section>
+        <section>
+          <h1>Ranges</h1>
+          <q>Mye kult, mye rart</q>
+        </section>
 
+        <section>
+          <section>
+            <h2>Memory managment</h2>
+          </section>
+        </section>
 
-            <section>
-                <section>
-                    <h2>Memory managment</h2>
-                </section>
-            </section>
+        <section>
+          <h1>Ting som gjør livet vansklig</h1>
+          <q>C++ is the language of wrong defaults</q>
+        </section>
 
+        <section>
+          <h1>Optimalisering</h1>
+        </section>
 
+        <section>
+          <section>
+            <h3>Råd 1: Bruk <code>.find()</code></h3>
+            <p>Hva er problemet et mulig problem her?</p>
 
-            <section>
-                <h1>Ting som gjør livet vansklig</h1>
-                <q>C++ is the language of wrong defaults</q>
-            </section>
+            <pre><code data-id="wow" data-trim class="language-cpp"  data-line-numbers="|4"><script type="text/template">
+              std::unordered_map<int, int> lastSensorTemp;
 
-            <section>
-                <h1>Optimalisering</h1>
-            </section>
-
-            <section>
-                <section>
-                    <h3>Råd 1: Bruk <code>.find()</code></h1>
-                        <p>Hva er problemet et mulig problem her?</p>
-
-                        <pre><code data-id="wow" data-trim class="language-cpp"  data-line-numbers="|4"><script type="text/template">
-                        std::unordered_map<int, int> lastSensorTemp;
-                        
-                        for (const auto sensorId : sensors) {
-                            if (60 < lastSensorTemp[sensorId]) {
-                                raiseAlarm(sensorId);
-                            } 
-                        }
-                </script></code></pre>
-                        <p class="fragment"></p>
-                </section>
-            </section>
-
-
-        </div>
+              for (const auto sensorId : sensors) {
+                  if (60 < lastSensorTemp[sensorId]) {
+                      raiseAlarm(sensorId);
+                  }
+              }
+            </script></code></pre>
+            <p class="fragment"></p>
+          </section>
+        </section>
+      </div>
     </div>
 
     <script src="dist/reveal.js"></script>
@@ -532,20 +604,21 @@
     <script src="plugin/markdown/markdown.js"></script>
     <script src="plugin/highlight/highlight.js"></script>
     <script>
-        // More info about initialization & config:
-        // - https://revealjs.com/initialization/
-        // - https://revealjs.com/config/
-        Reveal.initialize({
-            hash: true,
-            slideNumber: "c/t",
-            controls: true,
-            controlsTutorial: false,
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+        slideNumber: "c/t",
+        controls: true,
+        controlsTutorial: false,
+        width: 1000,
+        minScale: 0.2,
+        maxScale: 3.0,
 
-
-            // Learn about plugins: https://revealjs.com/plugins/
-            plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
-        });
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
     </script>
-</body>
-
+  </body>
 </html>
