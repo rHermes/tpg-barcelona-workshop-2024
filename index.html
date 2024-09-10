@@ -25,6 +25,7 @@
 
       <section>
         <h1>Gjør c++ enklere</h1>
+
         <q>Within C++, there is a much smaller and cleaner language struggling
           to get out</q>
         <p>Bjarne Stroustrup</p>
@@ -38,16 +39,42 @@
       </section>
 
       <section>
+        <section>
+          <h2>Mål</h2>
+          <ul>
+            <li>Gi håndfaste teknikker</li>
+            <li>Lære alle minst 1 konkret ting</li>
+            <li>Forklare motivasjon for språk utviklingen</li>
+            <li>Motivere videre utforskning</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Ikke mål</h2>
+          <ul>
+            <li>Å være for C++ nybegynnere</li>
+            <li>Å være for C++ eksperter</li>
+            <li>Være en komplett gjennomgang</li>
+            <li>Være feilfri ;)</li>
+            <li>Komme igjennom alle slidene</li>
+          </ul>
+        </section>
+      </section>
+
+
+
+      <section>
         <h2>Innhold</h2>
         <ul>
           <li>Små tips og triks</li>
           <li>🔥Lambdaer🔥</li>
           <li>🔥Concepts🔥</li>
           <li>Ranges</li>
-          <li><code>std::string_view</code></li>
+          <!--
           <li>Memory managment 👀</li>
           <li>Ting som gjør livet vansklig</li>
           <li>Optimalisering (hvis vi rekker...)</li>
+          -->
         </ul>
         <aside class="notes">
           Det er mye på tapetet her, så jeg prøver å putte de tingene som er
@@ -89,11 +116,35 @@
               Nesten drop in versjoner av <code>std::set</code> og
               <code>std::map</code>
             </li>
-            <li>Som regel mye raskere</li>
+            <li>Som regel mye raskere*</li>
             <li>Krever at nøkkelen kan hashes</li>
-            <li>Bør være deres default</li>
+            <li>Bør være deres default valg</li>
           </ul>
         </section>
+
+        <section>
+          <h3 style="color: yellow">*Forsatt MYE tregere en:</h3>
+          <ul>
+            <li><code>boost::unordered_*</code></li>
+            <li><code>abseil::swizz_*</code></li>
+          </ul>
+
+          <p>Grunnen til dette er at bucket interfacen er eksponert, som tvinger en gitt data struktur på trærene.</p>
+          <p>Aktivt forsknings område, alt ANNET en std blir bedre hele tiden!</p>
+        </section>
+
+        <section>
+          <h3>For mer morro rundt dette, se:</h3>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/xBAduq0RGes" title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <p>
+            "Designing a better hash table" av XXX (alt annet han gjør er også bra!)
+          </p>
+          <p>Og boost dokumentasjonen HER</p>
+        </section>
+
       </section>
 
       <!-- Structured bindings-->
@@ -297,6 +348,15 @@
         </section>
 
         <section>
+          <h3 data-id"code-header">Hva?</h3>
+          <ul>
+            <li>Teknisk sett: Perfekt forwarding construction</li>
+            <li>Praktisk sett: Mindre {} og bedre kode</li>
+          </ul>
+        </section>
+
+        <!--
+        <section>
           <h3>Hvorfor?</h3>
           <ul>
             <li>Bedre syntax</li>
@@ -304,6 +364,7 @@
             <li>Conditional moves for map!</li>
           </ul>
         </section>
+        -->
 
         <section>
           <h3>Hva støtter dette?</h3>
@@ -400,6 +461,12 @@
         </section>
       </section>
 
+      <!-- std::string_view if I have the energy.
+      <section>
+
+      </section>
+      -->
+
       <!-- Lambdas -->
       <section>
         <h1>🔥Lambdaer🔥</h1>
@@ -411,9 +478,11 @@
           <li>Siden C++11</li>
           <li>Anonyme funksjoner, definert inline</li>
           <li>Utrolig nyttige!</li>
-          <li>Zero overhead!</li>
+          <li>Zero overhead!*</li>
           <li>Jeg tenker ofte på dem som macroer</li>
         </ul>
+
+        <p class="fragment" style="color: red">* Ikke noe krangling, med mindre du har <u>bra</u> benchmarks</p>
       </section>
 
       <section>
@@ -439,15 +508,16 @@
 
             funcName(); // ref = 1
             funcName(); // ref = 2
-            std::cout <<  byRef << "\n"; // Outside = 2
+            std::cout << "Outside = " << byRef << "\n"; // Outside = 2
             byRef = 10;
             funcName(); // ref = 11
           </script></code></pre>
         </section>
 
+
         <section>
           <h3>Lambda syntax - Captures II</h3>
-          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3|8-10|11-12|13"><script type="text/template">
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3|4-5|8-10|11-12|13"><script type="text/template">
             int byRef = 0;
             int byVal = 0;
             auto funcName = [&byRef, byVal]() {
@@ -457,7 +527,7 @@
 
             funcName(); // ref = 1, val = 0
             funcName(); // ref = 2, val = 0
-            std::cout <<  byRef << "\n"; // Outside = 2
+            std::cout << "Outside = " << byRef << "\n"; // Outside = 2
             byRef = 10;
             byVal = 10;
             funcName(); // ref = 11, val = 0
@@ -466,7 +536,7 @@
 
         <section>
           <h3>Lambda syntax - Captures III</h3>
-          <pre><code data-trim class="language-cpp" data-line-numbers="|3"><script type="text/template">
+          <pre><code data-trim class="language-cpp" data-line-numbers="|3|5|8-9|10-122"><script type="text/template">
             int byRef = 0;
             int byVal = 10;
             auto funcName = [&byRef, byVal]() mutable {
@@ -484,7 +554,7 @@
 
         <section>
           <h3>Lambda syntax - Captures IV</h3>
-          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3|8|13-16"><script type="text/template">
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3|4-5|8|9-10|13-16"><script type="text/template">
             int a = 0;
             int b = 10;
             auto allByRef = [&]() {
@@ -514,7 +584,7 @@
 
         <section>
           <h3>Sortere en vector</h3>
-          <pre><code data-trim class="language-cpp" data-line-numbers="|1-5|7|8-15"><script type="text/template">
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1-5|7|9-16"><script type="text/template">
             struct Customer {
               std::string name;
               int age;
@@ -522,6 +592,7 @@
             };
 
             std::vector<Customer> customers;
+              
             std::ranges::sort(customers, [](const Customer& x,
                                             const Customer& y) {
               if (x.money != y.money) {
@@ -530,13 +601,12 @@
 
               return x.name < y.name;
             });
-
           </script></code></pre>
         </section>
 
         <section>
           <h3>Sortere en const vector</h3>
-          <pre><code data-trim class="language-cpp" data-line-numbers="|1-8|10-11|13-22"><script type="text/template">
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1-8|10-11|13-23|25-27"><script type="text/template">
             struct Customer {
               std::string name;
               int age;
@@ -550,15 +620,20 @@
             std::iota(indices.begin(), indices.end(), 0); // 0, 1, 2, ...
 
             std::ranges::sort(indices, [&](const int i,
-                                            const int j) {
+                                           const int j) {
               const auto& x = customers[i];
               const auto& y = customers[j];
+
               if (x.money != y.money) {
                 return x.money < y.money;
               }
 
               return x.name < y.name;
             });
+
+            for (const auto idx : indices) {
+              std::cout << customers[idx].name << "\n";
+            }
           </script></code></pre>
         </section>
 
@@ -695,7 +770,7 @@ for (int r = 0; r < N; r++) {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <p>
-          C++ lambda Idioms av Timur Doumler (alt annet han gjør er også bra!)
+          "C++ lambda Idioms" av Timur Doumler (alt annet han gjør er også bra!)
         </p>
       </section>
 
@@ -712,12 +787,13 @@ for (int r = 0; r < N; r++) {
 
       <section>
         <h3>Motivasjon</h3>
+        <p>Å skape noe lignende en "interface for typer".<br /> Dette kan gi oss:</p>
         <ul>
           <li>Bedre feilmeldinger</li>
           <li>bli kvitt <code>std::enable_if</code></li>
           <li>Mindre press på function overloading</li>
           <li>Bedre auto completion!</li>
-          <li>Compiler speed (Ikke der enda)</li>+
+          <li>Compiler speed (Ikke der enda)</li>
         </ul>
       </section>
 
@@ -732,39 +808,75 @@ for (int r = 0; r < N; r++) {
 
       <section>
         <section>
+          <h3>First look</h3>
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3-4|"><script type="text/template">
+            template <typename T>
+            concept Mathable = requires(T a) {
+              {a + a} -> std::convertable_to<T>;
+              {a - a} -> std::convertable_to<T>;
+            };
+          </script></code></pre>
+        </section>
+
+        <section>
+          <p>Kan brukes som en ren boolean check:</p>
+          <pre><code data-trim class="language-cpp"><script type="text/template">
+            static_assert(Mathable<int>);
+          </script></code></pre>
+
+          <p>Eller som et krav i en template parameter pack</p>
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1"><script type="text/template">
+            template <Mathable T>
+            T sum(const std::vector<T>& data) {
+              T out = data.first();
+
+              for (int i = 1; i < data.size(); i++) {
+                out = out + data[i];
+              }
+
+              return out;
+            }
+          </script></code></pre>
+        </section>
+      </section>
+      </section>
+
+
+
+      <section>
+        <section>
           <h3>Eksempel</h3>
 
-          <p>Vi skal lage en enkel tegne api</p>
+          <p>Vi skal lage et enkelt tegne api <small>(STK-lite?)</small></p>
           <ul>
             <li>Basert på å kalle metoder på en type T</li>
-            <li>Vi ønsker at alle type tegner støtter:</li>
+            <li>Vi ønsker at typen støtter:</li>
             <ul>
-              <li><code>size()</code></li>
-              <li><code>draw(int, int);</code></li>
-              <li><code>clear()</code></li>
+              <li><code>.size()</code></li>
+              <li><code>.draw(int, int);</code></li>
+              <li><code>.clear()</code></li>
             </ul>
-            <li>Kunne brukt polymorphism, men ikke alltid mulig.</li>
+            <li>Kunne brukt et klasse hirarki, men ikke alltid mulig</li>
           </ul>
         </section>
 
         <section>
           <h3>Display Concept</h3>
-          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|4|6|8"><script type="text/template">
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3-4|5-6|7-8"><script type="text/template">
             template <typename T>
-              concept Display = requires(T a, int i) {
-                  // # 1
-                  a.clear();
-                  // #2
-                  a.draw(i, i);
-                  // #3
-                  { a.size() } -> std::same_as<std::pair<int, int>>;
-              };
+            concept Display = requires(T a, int i) {
+                a.clear();
+
+                a.draw(i, i);
+
+                { a.size() } -> std::same_as<std::pair<int, int>>;
+            };
           </script></code></pre>
         </section>
 
         <section>
           <h3>Eksempel tegne funksjon</h3>
-          <pre><code data-trim class="language-cpp"><script type="text/template">
+          <pre><code data-trim class="language-cpp" data-line-numbers="|1-2|3-13"><script type="text/template">
             template <Display T>
             void drawBorder(T& display) {
                 const auto [W, H] = display.size();
@@ -783,28 +895,32 @@ for (int r = 0; r < N; r++) {
         </section>
 
         <section>
-          <h3>Feilmeldinger: gi inn en streng</h3>
+          <h3>Bedre Feilmeldinger</h3>
           <pre><code data-trim class="language-cpp"><script type="text/template">
             std::string hello;
             drawBorder(hello);
             </script></code></pre>
         </section>
         <section>
-          <h3>Bedre feilmeldinger</h3>
+          <h3>Bedre feilmeldinger: Før concepts</h3>
           <img class="r-stretch" src="dist/img/display-raw-error.png" />
         </section>
         <section>
-          <h3>Bedre feilmeldinger</h3>
+          <h3>Bedre feilmeldinger: Etter concepts</h3>
           <img class="r-stretch" src="dist/img/display-concept-error.png" />
         </section>
         <section>
           <h3>Bedre feilmeldinger</h3>
           <ul>
             <li>Vi får bare ut 1 feil vs alle bruks steder</li>
+            <ul>
+              <li>Dette endrer skaleringen helt</li>
+              <li>God gamle 300 feil fra et api kall er borte :)</li>
+            </ul>
             <li>Vi får melding før expansion skjer</li>
-            <li>Feilen sier mer om hva VI må gjøre</li>
+            <li>Feilen sier mer om hva <u>vi</u> må gjøre</li>
           </ul>
-        </section>+
+        </section>
 
 
 
@@ -873,6 +989,7 @@ for (int r = 0; r < N; r++) {
         <section>
           <h3>Mye bra i standard bibliteket</h3>
           <!-- Legg opp liste over metoder.-->
+          <!-- Show numeric only vector-->
         </section>
 
         <section>
@@ -880,6 +997,63 @@ for (int r = 0; r < N; r++) {
           <!-- Vise hvordan man kombinerer concepter-->
         </section>
       </section>
+
+      <section>
+        <section>
+          <p>Men Teodor, hvordan fungerer det her?</p>
+        </section>
+
+        <section>
+          <h1 class="r-fit-text">🚨🚨🚨<br />TECHINCAL SLIDES INCOMING<br />🚨🚨🚨</h1>
+        </section>
+
+        <section>
+          <h2>👻 SFINAE 👻</h2>
+          <ul>
+            <li>Substitution</li>
+            <li>Failure</li>
+            <li>Is</li>
+            <li>Not</li>
+            <li>An</li>
+            <li>Error</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>👻 SFINAE 👻</h2>
+          <ul>
+            <li>No expansion? No problem?</li>
+            <ul>
+              <li>Bare på signatur!</li>
+            </ul>
+
+            <li>Skjer under overload resolution</li>
+            <li>"5 Minutes to learn, a lifetime to master"</li>
+            <li style="color: red" class="fragment">"An eternity to regret"</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Eksempel</h3>
+          <pre><code data-trim class="language-cpp"><script type="text/template">
+            // For types which have a ::size_type (vector, list, etc)
+            template <typename C>
+            typename C::size_type length(const C& c) {
+              return c.size();
+            }
+
+            // Fallback for all other types
+            std::size_t length(...) {
+              return 0;
+            }
+          </script></code></pre>
+        </section>
+
+        <section>
+          INSERT IT'S JUST SFINAE? MEME?
+        </section>
+      </section>
+
 
       <!-- Ranges -->
       <section>
@@ -905,18 +1079,218 @@ for (int r = 0; r < N; r++) {
           <img src="dist/img/list-of-range-concepts.png" class="r-stretch" />
         </section>
 
-        <section>
+        <section data-auto-animate="">
           <h3>Ranges Conceptet</h3>
-          <pre><code data-trim class="language-cpp"><script type="text/template">
+          <pre data-id="wow2"><code data-trim class="language-cpp"><script type="text/template">
 template<class T>
 concept range = requires( T& t ) {
     ranges::begin(t); // equality-preserving for forward iterators
-    ranges::end (t);
+    ranges::end(t);
 };
+          </script></code></pre>
+        </section>
+
+        <section data-auto-animate="">
+          <pre data-id="wow2"><code data-trim class="language-cpp"><script type="text/template">
+template<class T>
+concept range = requires( T& t ) {
+    ranges::begin(t); // equality-preserving for forward iterators
+    ranges::end(t);
+};
+          </script></code></pre>
+
+          <ul>
+            <li>This is it folks!</li>
+            <li>Egentlig bare et start, slutt par av iteratorer</li>
+            <li>Men det gjør ting mye bedre!</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Bedre standard funksjoner</h2>
+          <pre><code data-trim class="language-cpp"><script type="text/template">
+            // Old busted:
+            std::sort(data.begin(), data.end());
+
+            // New goodness:
+            std::ranges::sort(data);
+          </script></code></pre>
+        </section>
+
+        <section>
+          <h2>Bedre standard funksjoner</h2>
+          <ul>
+            <li>Mindre støy</li>
+            <li>Ikke mulig å mixe iterators</li>
+            <li>Bedre compile times (ikke spør)</li>
+            <li>For omtrent alle standard funksjoner som tar et iterator par</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Egen bruk:</h2>
+          <pre><code data-trim class="language-cpp"><script type="text/template">
+            template <std::ranges::range R>
+            void printIt(R&& r) {
+              for (const auto& x : r) {
+                std::cout << r << "\n";
+              }
+            }
+
+
+            printIt(std::list<int>{1, 2, 3});
+            printIt(std::vector<int>{1, 2, 3});
+            printIt(std::deque<int>{1, 2, 3});
           </script></code></pre>
         </section>
       </section>
 
+      <section>
+        <section>
+          <h3>Views: "We got LINQ at home"</h3>
+          <!-- Insert a list of views here-->
+          <div class="r-stack r-stretch">
+            <img
+              class="fragment fade-out current-visible"
+              src="dist/img/list-of-view-one.png"
+            />
+            <img
+            class="fragment  current-visible fade-out"
+            src="dist/img/list-of-view-two.png"
+            />
+            <img
+            class="fragment  current-visible r-stretch"
+            src="dist/img/list-of-view-three.png"
+            />
+            <img
+            class="fragment   current-visible r-stretch"
+            src="dist/img/list-of-view-factories.png"
+            />
+           
+          </div>
+        </section>
+
+        <section>
+          <h2>Disclaimer</h2>
+          <ul>
+            <li>Jeg har hatt veldig lite kontakt med disse</li>
+            <ul>
+              <li>Den ekte eksperten i rommet er Andreas Lund</li>
+            </ul>
+            <li>Delvis at jeg ikke har hat tid</li>
+            <li>Delvis at codegen enda er... meh</li>
+            <ul>
+              <li>Betyr ikke noe for normale applikasjoner</li>
+              <li>Men jeg har tvangstanker :P</li>
+            </ul>
+            <li>Delvis at det blir best med C++23</li>
+          </ul>
+        </section>
+
+
+        <section>
+          <h2>Hva er et view?</h2>
+          <ul>
+            <li>En lazy adapter for en range</li>
+            <li>(Eller en range generator)</li>
+            <li>Garantert billig å kopiere</li>
+          </ul>
+        </section>
+
+        <section data-auto-animate>
+          <h2>Eksempel: Reverser en liste</h2>
+          <pre data-id="wow4"><code data-trim class="language-cpp" data-line-numbers="|3"><script type="text/template">
+          std::vector<int> data = {1, 2, 3, 4, 5, 6};
+
+          auto rev = std::views::reverse(data);
+
+          for (const auto x : rev)
+            std::cout << x << ", ";
+          </script></code></pre>
+        </section>
+
+        <section data-auto-animate>
+          <h2>Eksempel: Reverser en liste</h2>
+          <pre data-id="wow4"><code data-trim class="language-cpp" data-line-numbers="3"><script type="text/template">
+          std::vector<int> data = {1, 2, 3, 4, 5, 6};
+
+          auto rev = data | std::views::reverse;
+
+          for (const auto x : rev)
+            std::cout << x << ", ";
+          </script></code></pre>
+        </section>
+
+        <section data-auto-animate>
+          <h2>Eksempel: Reverser en liste</h2>
+          <pre data-id="wow4"><code data-trim class="language-cpp" data-line-numbers="3"><script type="text/template">
+          std::vector<int> data = {1, 2, 3, 4, 5, 6};
+
+          for (const auto x : data | std::views::reverse)
+            std::cout << x << ", ";
+          </script></code></pre>
+        </section>
+
+        <section data-auto-animate>
+          <h2>Eksempel: Reverser en liste</h2>
+          <pre data-id="wow4"><code data-trim class="language-cpp" data-line-numbers="1"><script type="text/template">
+          auto data = std::views::iota(1, 7);
+
+          for (const auto x : data | std::views::reverse)
+            std::cout << x << ", ";
+          </script></code></pre>
+        </section>
+
+        <section data-auto-animate>
+          <h2>Eksempel: Reverser en liste</h2>
+          <pre data-id="wow4"><code data-trim class="language-cpp" data-line-numbers="1,3"><script type="text/template">
+          auto data = std::views::iota(1); // 1, 2, 3, ...
+
+          for (const auto x : data | std::views::take(6) | std::views::reverse)
+            std::cout << x << ", ";
+          </script></code></pre>
+        </section>
+
+
+        <section>
+          <h2>Evaluering</h2>
+          <ul>
+            <li>Noen steder gjør det koden mye bedre</li>
+            <ul>
+              <li>zip_view</li>
+              <li>chunked_view</li>
+            </ul>
+            
+            <li>Andre ganger er det "write once, read a 100 times" kode</li>
+            <li>Har per i dag en del performance overhead</li>
+            <ul>
+              <li>Veldig relativt!</li>
+              <li>Blir bedre og bedre!</li>
+              <li>Men ikke gå helt crazy, helt enda</li>
+            </ul>
+          </ul>
+        </section>
+        
+        <section>
+          <h2>Evaluering</h2>
+          <ul>
+            <li>De er faktisk bra designet</li>
+            <ul>
+              <li>Vi har kanskje det beste iterators systemet</li>
+              <li>Views beholder egenskapene til deres foreldre</li>
+            </ul>
+            <li>Andre språk går denne veien</li>
+            <ul>
+              <li>Rust</li>
+              <li>C# med linq</li>
+            </ul>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Om du vil vite mer om denne delen, men også et alternativt bibliotek</h2>
+        </section>
+      </section>
 
       <!-- Sløyfe diss
       <section>
@@ -960,7 +1334,7 @@ concept range = requires( T& t ) {
           <h3>Råd 1: Bruk <code>.find()</code></h3>
           <p>Hva er problemet et mulig problem her?</p>
 
-          <pre  data-id="wow"><code data-trim class="language-cpp"  data-line-numbers="|"><script type="text/template">
+          <pre data-id="wow"><code data-trim class="language-cpp"  data-line-numbers="|"><script type="text/template">
               std::unordered_map<int, int> lastSensorTemp;
 
               for (const auto sensorId : sensors) {
@@ -1014,7 +1388,32 @@ concept range = requires( T& t ) {
         </section>
       </section>
 
-      
+      <section>
+        <section>
+          <h3>Råd 4: Prefer std::array når størrelsen er konstants</h3>
+          <pre data-id="wow"><code  data-trim class="language-cpp" data-line-numbers="|"><script type="text/template">
+            std::vector<std::string> navn;
+
+            for (int i = 0; i < N; i++) {
+              navn.push_bacK("navn" + std::to_string(i));
+            }
+          </script></code></pre>
+        </section>
+
+        <section data-auto-animate>
+          <h3>Råd 3: Presize vector</h3>
+          <pre data-id="wow"><code data-trim class="language-cpp"  data-line-numbers="|2"><script type="text/template">
+            std::vector<std::string> navn;
+            navn.reserve(N);
+
+            for (int i = 0; i < N; i++) {
+              navn.push_bacK("navn" + std::to_string(i));
+            }
+          </script></code></pre>
+        </section>
+      </section>
+
+
     </div>
   </div>
 
