@@ -13,6 +13,13 @@
 
   <!-- Theme used for syntax highlighted code -->
   <link rel="stylesheet" href="plugin/highlight/base16/solarized-light.css" />
+
+  <style>
+    .reveal .slide-number {
+  font-size: 20pt;
+  /* color: #ffffff; */
+ }
+  </style>
 </head>
 
 <body>
@@ -135,14 +142,15 @@
 
         <section>
           <h3>For mer morro rundt dette, se:</h3>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/xBAduq0RGes" title="YouTube video player"
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/ncHmEUmJZf4" title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           <p>
-            "Designing a better hash table" av XXX (alt annet han gjør er også bra!)
+            "Designing a better hash table" av Matt Kulukundis (han har andre bra talks)
           </p>
-          <p>Og boost dokumentasjonen HER</p>
+          <p>Og boost dokumentasjonen <a
+              href="https://www.boost.org/doc/libs/1_86_0/libs/unordered/doc/html/unordered.html">her :)</a></p>
         </section>
 
       </section>
@@ -897,8 +905,8 @@ for (int r = 0; r < N; r++) {
         <section>
           <h3>Bedre Feilmeldinger</h3>
           <pre><code data-trim class="language-cpp"><script type="text/template">
-            std::string hello;
-            drawBorder(hello);
+            std::string hello = "Dette kommer ikke til å fungere";
+            drawBorder(hello); // Oh no!
             </script></code></pre>
         </section>
         <section>
@@ -919,6 +927,10 @@ for (int r = 0; r < N; r++) {
             </ul>
             <li>Vi får melding før expansion skjer</li>
             <li>Feilen sier mer om hva <u>vi</u> må gjøre</li>
+            <ul>
+              <li>Forteller om feilen i vår kode</li>
+              <li>Ikke steder hvor ting går galt inne i funksjonen</li>
+            </ul>
           </ul>
         </section>
 
@@ -983,19 +995,47 @@ for (int r = 0; r < N; r++) {
 
       <section>
         <section>
-          <h3>Litt misc mer</h3>
-        </section>
-
-        <section>
           <h3>Mye bra i standard bibliteket</h3>
+          <img src="dist/img/list-of-concepts.png" class="r-stretch" />
           <!-- Legg opp liste over metoder.-->
           <!-- Show numeric only vector-->
         </section>
 
         <section>
           <h3>Kombinere konsepter</h3>
+          <pre><code data-trim class="language-cpp"><script type="text/template">
+            template <typename T>
+            concept CombiTall = std::floating_point<T> && std::integral<T>;
+          </script></code></pre>
           <!-- Vise hvordan man kombinerer concepter-->
         </section>
+
+        <section>
+          <h3>Alternativ require syntax</h3>
+          <pre><code data-trim class="language-cpp"><script type="text/template">
+            template <typename T> requires std::floating_point<T>
+            void test(T hey) {};
+          </script></code></pre>
+          <!-- Vise hvordan man kombinerer concepter-->
+        </section>
+
+        <section>
+          <h3>Bruke til å velge mellom funksjoner basert på typer</h3>
+          <pre><code data-trim class="language-cpp"><script type="text/template">
+            template <std::floating_point F>
+            F square(F in); // #1
+
+            template <std::integral I>
+            I square(I in); // #2
+
+            square(23.4); // Treffer #1
+            square(2);    // Treffer #2
+          </script></code></pre>
+          <!-- Vise hvordan man kombinerer concepter-->
+        </section>
+
+
+
       </section>
 
       <section>
@@ -1050,7 +1090,12 @@ for (int r = 0; r < N; r++) {
         </section>
 
         <section>
-          INSERT IT'S JUST SFINAE? MEME?
+          <img class="r-stretch" src="dist/img/function-resolution.png" />
+        </section>
+
+
+        <section>
+          <img class="r-stretch" src="dist/img/concepts-meme.png" />
         </section>
       </section>
 
@@ -1150,23 +1195,11 @@ concept range = requires( T& t ) {
           <h3>Views: "We got LINQ at home"</h3>
           <!-- Insert a list of views here-->
           <div class="r-stack r-stretch">
-            <img
-              class="fragment fade-out current-visible"
-              src="dist/img/list-of-view-one.png"
-            />
-            <img
-            class="fragment  current-visible fade-out"
-            src="dist/img/list-of-view-two.png"
-            />
-            <img
-            class="fragment  current-visible r-stretch"
-            src="dist/img/list-of-view-three.png"
-            />
-            <img
-            class="fragment   current-visible r-stretch"
-            src="dist/img/list-of-view-factories.png"
-            />
-           
+            <img class="fragment fade-out current-visible" src="dist/img/list-of-view-one.png" />
+            <img class="fragment  current-visible fade-out" src="dist/img/list-of-view-two.png" />
+            <img class="fragment  current-visible r-stretch" src="dist/img/list-of-view-three.png" />
+            <img class="fragment   current-visible r-stretch" src="dist/img/list-of-view-factories.png" />
+
           </div>
         </section>
 
@@ -1260,7 +1293,7 @@ concept range = requires( T& t ) {
               <li>zip_view</li>
               <li>chunked_view</li>
             </ul>
-            
+
             <li>Andre ganger er det "write once, read a 100 times" kode</li>
             <li>Har per i dag en del performance overhead</li>
             <ul>
@@ -1270,7 +1303,7 @@ concept range = requires( T& t ) {
             </ul>
           </ul>
         </section>
-        
+
         <section>
           <h2>Evaluering</h2>
           <ul>
@@ -1288,7 +1321,11 @@ concept range = requires( T& t ) {
         </section>
 
         <section>
-          <h2>Om du vil vite mer om denne delen, men også et alternativt bibliotek</h2>
+          <h3>Om du vil vite mer om denne delen, men også et alternativt bibliotek</h3>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/l3AxYei17ls?si=v8WrRYvIpg6eszbE"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </section>
       </section>
 
@@ -1370,7 +1407,7 @@ concept range = requires( T& t ) {
             std::vector<std::string> navn;
 
             for (int i = 0; i < N; i++) {
-              navn.push_bacK("navn" + std::to_string(i));
+              navn.push_back("navn" + std::to_string(i));
             }
           </script></code></pre>
         </section>
@@ -1382,35 +1419,18 @@ concept range = requires( T& t ) {
             navn.reserve(N);
 
             for (int i = 0; i < N; i++) {
-              navn.push_bacK("navn" + std::to_string(i));
+              navn.push_back("navn" + std::to_string(i));
             }
           </script></code></pre>
         </section>
       </section>
 
       <section>
-        <section>
           <h3>Råd 4: Prefer std::array når størrelsen er konstants</h3>
-          <pre data-id="wow"><code  data-trim class="language-cpp" data-line-numbers="|"><script type="text/template">
-            std::vector<std::string> navn;
-
-            for (int i = 0; i < N; i++) {
-              navn.push_bacK("navn" + std::to_string(i));
-            }
+          <pre data-id="wow"><code  data-trim class="language-cpp"><script type="text/template">
+            std::array<int, 2048> arr;   // Initialiserer IKKE verdiene
+            std::array<int, 2048> arr{}; // Initialiserer til default, 0
           </script></code></pre>
-        </section>
-
-        <section data-auto-animate>
-          <h3>Råd 3: Presize vector</h3>
-          <pre data-id="wow"><code data-trim class="language-cpp"  data-line-numbers="|2"><script type="text/template">
-            std::vector<std::string> navn;
-            navn.reserve(N);
-
-            for (int i = 0; i < N; i++) {
-              navn.push_bacK("navn" + std::to_string(i));
-            }
-          </script></code></pre>
-        </section>
       </section>
 
 
@@ -1427,8 +1447,8 @@ concept range = requires( T& t ) {
     // - https://revealjs.com/config/
     Reveal.initialize({
       hash: true,
-      slideNumber: "c/t",
-      controls: true,
+      slideNumber: true,
+      controls: false,
       controlsTutorial: false,
       width: 1400,
       minScale: 0.2,
